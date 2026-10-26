@@ -2,7 +2,11 @@
 
 A small setup kit for running [OmniRoute](https://github.com/diegosouzapw/OmniRoute), a self-hosted AI gateway, on your own machine (including Android via Termux) and checking that it is private and working.
 
-## What's in here
+## Also in this repo
+
+- [jarvis/](jarvis/): a personal offline-first, voice-first AI assistant for Android/Termux (early skeleton).
+
+## What's in here (OmniRoute kit)
 
 | File | Purpose |
 |---|---|
