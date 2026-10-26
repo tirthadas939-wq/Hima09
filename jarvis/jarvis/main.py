@@ -39,7 +39,53 @@ def torch(on):
         speak("Torch on." if on else "Torch off.")
 
 
-HELP = "Commands: battery, torch on, torch off, say <text>, help, exit"
+def listen():
+    """Listen once through the phone's speech recognition. Returns the text, or None."""
+    out = run(["termux-speech-to-text"])
+    if out is None:
+        return None
+    text = out.strip()
+    return text or None
+
+
+def clean(text):
+    """Turn recognised speech into a command: lowercase, no punctuation, no extra spaces."""
+    kept = [c if c.isalnum() or c.isspace() else " " for c in text.lower()]
+    return " ".join("".join(kept).split())
+
+
+MAX_SILENT_TURNS = 3
+STOP_PHRASES = ("stop listening", "stop voice", "voice off")
+
+
+def voice_mode():
+    """Take spoken commands until told to stop. Returns False if the user asked to quit."""
+    speak("Listening. Say stop listening to go back to typing.")
+    silent = 0
+    while True:
+        heard = listen()
+        if heard is None:
+            silent += 1
+            if silent >= MAX_SILENT_TURNS:
+                speak("I didn't hear anything, so I stopped listening.")
+                return True
+            continue
+        silent = 0
+        command = clean(heard)
+        print(f"Heard: {heard}")
+        if command in STOP_PHRASES:
+            speak("Okay, back to typing.")
+            return True
+        if command in ("voice", "listen"):
+            continue
+        if not handle(command):
+            return False
+
+
+HELP = (
+    "Commands: battery, torch on, torch off, say <text>, voice, help, exit\n"
+    "In voice mode, say the same commands out loud. Say 'stop listening' to leave it."
+)
 
 
 def handle(line):
@@ -49,6 +95,8 @@ def handle(line):
     if lowered in ("exit", "quit"):
         speak("Goodbye.")
         return False
+    if lowered in ("voice", "listen"):
+        return voice_mode()
     if lowered == "battery":
         battery()
     elif lowered == "torch on":

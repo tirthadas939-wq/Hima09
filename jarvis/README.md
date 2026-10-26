@@ -10,7 +10,7 @@ A personal, JARVIS-inspired AI assistant for Android, running in Termux.
 - Hybrid brain: a small local model for everyday tasks, with an optional online model for hard ones
 - Phone control: battery, torch, volume, apps, calls and messages through Termux:API
 
-**Status:** early skeleton. Text commands and spoken replies work. Voice input and the AI brain are next (see the roadmap).
+**Status:** early skeleton. Text commands, spoken replies and voice input work. The AI brain is next (see the roadmap).
 
 ## Requirements
 
@@ -42,8 +42,19 @@ Type a command at the `>` prompt. Current commands:
 | `battery` | Reads battery level and charging state |
 | `torch on` / `torch off` | Turns the flashlight on or off |
 | `say <text>` | Speaks the text aloud |
+| `voice` | Switches to voice mode: say the same commands out loud |
 | `help` | Lists commands |
 | `exit` | Quits |
+
+### Voice mode
+
+Type `voice`. JARVIS listens through your phone's speech recognition (`termux-speech-to-text`, so it uses Google's recogniser and needs the Termux:API microphone permission).
+
+- Say any command above, for example "battery" or "torch on".
+- Say "stop listening" to go back to typing, or "exit" to quit.
+- After three silent turns in a row it stops listening on its own.
+
+Termux's speech recognition may send audio to Google, so it is not fully offline. An offline recogniser is on the roadmap.
 
 ## Project layout
 
@@ -56,12 +67,13 @@ setup-termux.sh    installs Termux packages and checks Termux:API
 
 ## Roadmap
 
-1. Voice input with `termux-speech-to-text`
-2. Local brain: run a small model with `llama.cpp` and wire it to the command loop
-3. Optional online brain for hard questions, switched on only when you allow it
-4. More phone control: volume, open apps, calls, SMS, reminders
-5. Wake word and background service
+1. ~~Voice input with `termux-speech-to-text`~~ (done)
+2. Offline voice input (for example Vosk), so listening works without internet
+3. Local brain: run a small model with `llama.cpp` and wire it to the command loop
+4. Optional online brain for hard questions, switched on only when you allow it
+5. More phone control: volume, open apps, calls, SMS, reminders
+6. Wake word and background service
 
 ## Privacy
 
-Everything runs on your phone. Keys, if you add any, go in `.env`, which git ignores.
+Commands and replies run on your phone. The one exception is voice input: `termux-speech-to-text` uses Android's speech recogniser, which may send audio to Google. Typed commands never leave the phone. Keys, if you add any, go in `.env`, which git ignores.
