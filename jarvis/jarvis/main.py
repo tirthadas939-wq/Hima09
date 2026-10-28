@@ -27,8 +27,18 @@ def battery():
     if out is None:
         speak("I can't read the battery. Is Termux:API installed?")
         return
-    info = json.loads(out)
-    state = "charging" if info.get("status") == "CHARGING" else "not charging"
+    try:
+        info = json.loads(out)
+    except json.JSONDecodeError:
+        speak("I got an unreadable answer from the battery. Try again.")
+        return
+    status = info.get("status")
+    if status == "CHARGING":
+        state = "charging"
+    elif status == "FULL":
+        state = "fully charged"
+    else:
+        state = "not charging"
     speak(f"Battery is at {info.get('percentage')} percent and {state}.")
 
 

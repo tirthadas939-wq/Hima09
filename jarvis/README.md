@@ -59,10 +59,12 @@ Termux's speech recognition may send audio to Google, so it is not fully offline
 ## Project layout
 
 ```
-jarvis/
-  main.py          command loop and the phone-control actions
-setup-termux.sh    installs Termux packages and checks Termux:API
-.env.example       settings template (copy to .env)
+jarvis/                 this folder
+  jarvis/
+    __init__.py
+    main.py             command loop and the phone-control actions
+  setup-termux.sh       installs Termux packages and checks Termux:API
+  .env.example          settings template (copy to .env)
 ```
 
 ## Roadmap
